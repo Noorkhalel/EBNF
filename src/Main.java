@@ -5,22 +5,38 @@ public class Main {
     public static void main(String[] args) {
         List<String> name = new ArrayList<>(Arrays.asList());
         List<Integer> num = new ArrayList<>(Arrays.asList(1,2,3));
+        List<String> checkTokens = new ArrayList<>(Arrays.asList("input","output"));
+
         List<String> tokens = new ArrayList<>(Arrays.asList(
-                "project", "A", ";",
-                "const", "B", "=","integer-value",";",
-                "const", "C", "=","integer-value",";",
+                "project", "name", ";",
+                    "const", "name", "=","integer-value",";",
                 //
-                "var", "p",",","V", ":","int",";"
-                ,"var", "F",",","C",",","w",":","int",";"
+                    "var","name", ":","int",";"
                 //
-                ,"routine", "x",";"
-                ,"start","Aasdas",":=","s","*","S","+","m",";"
-                ,"end"
-                ,";"
-                //
-                ,"start","S",":=","V","*","S","+","a",";"
-                ,"end"
-                ,"."
+                    ,"routine", "name",";"
+                    ,"var","name", ":","int",";"
+                    ,"start"
+                        ,"input","(","name",")",";"
+                        ,"name",":=","name","+","name",";"
+                        ,"output","(","integer-value",")",";"
+                    ,"end",";"
+
+                     ,"start"
+                        ,"input","(","name",")",";"
+                        ,"if","(","name","<","name",")","then"
+                             ,"name",":=","name"
+                        ,"endif",";"
+//                        ,"start"
+//                        ,"end",";"
+                        ,"loop","(","name","<>","name",")","do"
+                            ,"start"
+                                ,"name",":=","name","+","name",";"
+                                ,"output","(","integer-value",")",";"
+                                ,"name",":=","name","+","name",";"
+                            ,"end",";"
+                        ,"input","(","name",")",";"
+                        ,"output","(","integer-value",")",";"
+                ,"end","."
         ));
 //        List<symbolTable> Sy = new ArrayList<>();
 //        for(int i=0;i<=tokens.size()-1;i++){
@@ -38,13 +54,18 @@ public class Main {
                     ||tokens.get(i).equals(":=")||tokens.get(i).equals("*")||tokens.get(i).equals("+")
                     ||tokens.get(i).equals("/")||tokens.get(i).equals("-")||tokens.get(i).equals("%")
                     ||tokens.get(i).equals("const")||tokens.get(i).equals("var")){
-                name.add(tokens.get(i+1));
+
+                    name.add(tokens.get(i+1));
+
+
+
 //                System.out.print(tokens.get(i+1)+" ");
             }
 
         }
 //        Sy.add(new symbolTable("class","A"));
-        Parser parser = new Parser(tokens,name,num);
+        Parser parser = new Parser(tokens);
         parser.parse();
     }
+
 }

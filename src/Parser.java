@@ -4,16 +4,16 @@ import java.util.List;
 
 class Parser {
     private List<String> tokens;
-    private List<String> name;
-    private List<Integer> num;
+//    private List<String> name;
+//    private List<Integer> num;
     private int index;
 
-    public Parser(List<String> tokens, List<String> name, List<Integer> num) {
-        this.tokens = tokens;
-        this.name = name;
-        this.num = num;
-        this.index = 0;
-    }
+//    public Parser(List<String> tokens, List<String> name, List<Integer> num) {
+//        this.tokens = tokens;
+//        this.name = name;
+//        this.num = num;
+//        this.index = 0;
+//    }
 
     public Parser(List<String> tokens) {
         this.tokens = tokens;
@@ -30,16 +30,16 @@ class Parser {
 //        }
 //        return exist;
 //    }
-    public boolean definedName(String Name){
-        boolean exist = false;
-        for(int i = 0; i<=name.size();i++){
-            if(name.get(i).equals(Name)){
-                exist = true;
-                return exist;
-            }
-        }
-        return exist;
-    }
+//    public boolean definedName(String Name){
+//        boolean exist = false;
+//        for(int i = 0; i<=name.size();i++){
+//            if(name.get(i).equals(Name)){
+//                exist = true;
+//                return exist;
+//            }
+//        }
+//        return exist;
+//    }
     public void parse() {
         try {
             projectDeclaration();
@@ -62,7 +62,7 @@ class Parser {
 
     private void projectHeading() {
         match("project");
-        matchName("name");
+        match("name");
         match(";");
     }
 
@@ -86,7 +86,7 @@ class Parser {
     }
 
     private void constItem() {
-        matchName("name");
+        match("name");
         match("=");
         match("integer-value");
     }
@@ -110,10 +110,10 @@ class Parser {
     }
 
     private void nameList() {
-        matchName("name");
+        match("name");
         while (tokens.get(index).equals(",")) {
             match(",");
-            matchName("name");
+            match("name");
         }
     }
 
@@ -130,7 +130,7 @@ class Parser {
 
     private void subroutineHeading() {
         match("routine");
-        matchName("name");
+        match("name");
         match(";");
     }
 
@@ -141,14 +141,14 @@ class Parser {
     }
 
     private void stmtList() {
-        while (!tokens.get(index).equals("end") && !tokens.get(index).equals("else") && !tokens.get(index).equals("loop")) {
+        while (!tokens.get(index).equals("end") && !tokens.get(index).equals("else")) {
             statement();
             match(";");
         }
     }
 
     private void statement() {
-        if (definedName(tokens.get(index))) {
+        if (tokens.get(index).equals("name")) {
             assStmt();
         } else if (tokens.get(index).equals("input") || tokens.get(index).equals("output")) {
             inoutStmt();
@@ -156,13 +156,15 @@ class Parser {
             ifStmt();
         } else if (tokens.get(index).equals("loop")) {
             loopStmt();
-        } else {
+        } else if (tokens.get(index).equals("start")){
+            compoundStmt();
+        }else {
             nullRule();
         }
     }
 
     private void assStmt() {
-        matchName("name");
+        match("name");
         match(":=");
         arithExp();
     }
@@ -189,7 +191,7 @@ class Parser {
             match("(");
             arithExp();
             match(")");
-        } else if (definedName(tokens.get(index)) || tokens.get(index).equals("integer-value")) {
+        } else if (tokens.get(index).equals("name") || tokens.get(index).equals("integer-value")) {
             nameValue();
         } else {
             error("Invalid factor: " + tokens.get(index));
@@ -197,8 +199,8 @@ class Parser {
     }
 
     private void nameValue() {
-        if (definedName(tokens.get(index))) {
-            matchName("name");
+        if (tokens.get(index).equals("name")) {
+            match("name");
         } else if (tokens.get(index).equals("integer-value")) {
             match("integer-value");
         } else {
@@ -215,7 +217,8 @@ class Parser {
         } else if (tokens.get(index).equals("output")) {
             match("output");
             match("(");
-            nameValue();
+//            nameValue();
+            match("integer-value");
             match(")");
         } else {
             error("Invalid inout statement: " + tokens.get(index));
@@ -266,14 +269,14 @@ class Parser {
         }
     }
 
-    private void matchName(String expectedToken){
-        if(expectedToken.equals("name")){
-            if(definedName(tokens.get(index)))
-            index++;
-        }else{
-            error("Undefined : " + expectedToken);
-        }
-    }
+//    private void matchName(String expectedToken){
+//        if(expectedToken.equals("name")){
+//            if(definedName(tokens.get(index)))
+//            index++;
+//        }else{
+//            error("Undefined : " + expectedToken);
+//        }
+//    }
     private void match(String expectedToken) {
         if (index < tokens.size() && tokens.get(index).equals(expectedToken)) {
             index++;
